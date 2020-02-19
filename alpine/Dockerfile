@@ -18,7 +18,7 @@ RUN set -eux; \
     pip install ansible && \
     rm -rf /tmp/* && \
     rm -rf ~/.cache/pip && \
-    find /usr/lib -iname '*.pyc' -o -iname '*.pyo' -exec rm {} \; && \
+    find /usr/lib \( -iname '*.pyc' -o -iname '*.pyo' \) -exec rm {} \; && \
     apk del .build-deps
 
 CMD [ "fish"]
