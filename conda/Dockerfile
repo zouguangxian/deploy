@@ -5,9 +5,9 @@ USER root
 RUN set -eux; \
     sed -i 's,//[^/]*/,//mirrors.tuna.tsinghua.edu.cn/,g' /etc/apk/repositories && \
     apk update && \
-    apk add bash zsh sed wget curl git && \
-    ln -f -s /bin/bash /bin/sh && \
-    ZSH=/home/anaconda/.oh-my-zsh /bin/sh -c "\$(wget -q -O - https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" install.sh --unattended && \
+    apk add zsh zsh-vcs sed wget curl git && \
+    wget -O /tmp/install.sh https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh && \
+    ZSH=/home/anaconda/.oh-my-zsh /bin/sh /tmp/install.sh  --unattended && \
     git clone https://github.com/bhilburn/powerlevel9k.git /home/anaconda/.oh-my-zsh/custom/themes/powerlevel9k && \
     git clone https://github.com/zsh-users/zsh-autosuggestions /home/anaconda/.oh-my-zsh/custom/plugins/zsh-autosuggestions && \
     git clone https://github.com/zsh-users/zsh-completions /home/anaconda/.oh-my-zsh/custom/plugins/zsh-completions && \
@@ -17,7 +17,9 @@ RUN set -eux; \
     echo "conda activate base" >> /home/anaconda/.zshrc && \
     chown -R anaconda:anaconda /home/anaconda && \
     /opt/conda/bin/conda install --yes -c conda-forge curl awscli terraform ansible && \
-    /opt/conda/bin/conda clean -afy
+    /opt/conda/bin/conda clean -afy && \
+    find /usr/lib \( -iname '*.pyc' -o -iname '*.pyo' \) -exec rm {} \;
+
 USER  10151
 
 CMD [ "zsh", "--login", "-i" ]
